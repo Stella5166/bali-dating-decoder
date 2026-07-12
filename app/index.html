@@ -1,518 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
 <title>Bali Dating Decoder</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#b23a4d">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Bali Decoder">
+<link rel="apple-touch-icon" href="icon-512.png">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
 <style>
   :root {
-    --surface-1: #fcfcfb;
-    --surface-2: #fffdfa;
-    --page: #f7f4ef;
+    --surface-1: #ffffff;
+    --surface-2: #fffaf7;
+    --page: #f4efe9;
     --text-primary: #0b0b0b;
-    --text-secondary: #52514e;
-    --text-muted: #898781;
-    --gridline: #e1e0d9;
+    --text-secondary: #55534f;
+    --text-muted: #8f8d87;
     --border: rgba(11,11,11,0.09);
-    --series: #b23a4d;      /* validated: light surface */
+    --series: #b23a4d;
     --series-soft: rgba(178,58,77,0.12);
-    --track: #f2dee1;       /* lighter step, same ramp */
-    --card-shadow: 0 1px 2px rgba(11,11,11,0.04), 0 6px 20px rgba(11,11,11,0.04);
-    --card-shadow-hover: 0 2px 6px rgba(178,58,77,0.10), 0 14px 34px rgba(178,58,77,0.10);
-    --hero-a: #fff2f0;
-    --hero-b: #fce9df;
-    --hero-c: #f3ecfa;
+    --track: #f2dee1;
+    --bar-h: 15px;
     --logo-filter: none;
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --surface-1: #1a1a19;
-      --surface-2: #201f1d;
-      --page: #0d0d0d;
+      --surface-1: #1c1b1a;
+      --surface-2: #221f1e;
+      --page: #0c0c0b;
       --text-primary: #ffffff;
-      --text-secondary: #c3c2b7;
-      --text-muted: #918f88;
-      --gridline: #2c2c2a;
-      --border: rgba(255,255,255,0.10);
-      --series: #d4556a;    /* validated: dark surface */
-      --series-soft: rgba(212,85,106,0.18);
-      --track: #3a2a2d;
-      --card-shadow: 0 1px 2px rgba(0,0,0,0.4);
-      --card-shadow-hover: 0 8px 30px rgba(212,85,106,0.14);
-      --hero-a: #241a1c;
-      --hero-b: #1e1a22;
-      --hero-c: #16181e;
-      --logo-filter: brightness(0) invert(0.92);
-    }
-  }
-
-  :root[data-theme="dark"] {
-      --surface-1: #1a1a19;
-      --surface-2: #201f1d;
-      --page: #0d0d0d;
-      --text-primary: #ffffff;
-      --text-secondary: #c3c2b7;
-      --text-muted: #918f88;
-      --gridline: #2c2c2a;
-      --border: rgba(255,255,255,0.10);
+      --text-secondary: #c6c4ba;
+      --text-muted: #928f88;
+      --border: rgba(255,255,255,0.11);
       --series: #d4556a;
       --series-soft: rgba(212,85,106,0.18);
       --track: #3a2a2d;
-      --card-shadow: 0 1px 2px rgba(0,0,0,0.4);
-      --card-shadow-hover: 0 8px 30px rgba(212,85,106,0.14);
-      --hero-a: #241a1c;
-      --hero-b: #1e1a22;
-      --hero-c: #16181e;
       --logo-filter: brightness(0) invert(0.92);
+    }
   }
-  :root[data-theme="light"] {
-      --surface-1: #fcfcfb;
-      --surface-2: #fffdfa;
-      --page: #f7f4ef;
-      --text-primary: #0b0b0b;
-      --text-secondary: #52514e;
-      --text-muted: #898781;
-      --gridline: #e1e0d9;
-      --border: rgba(11,11,11,0.09);
-      --series: #b23a4d;
-      --series-soft: rgba(178,58,77,0.12);
-      --track: #f2dee1;
-      --card-shadow: 0 1px 2px rgba(11,11,11,0.04), 0 6px 20px rgba(11,11,11,0.04);
-      --card-shadow-hover: 0 2px 6px rgba(178,58,77,0.10), 0 14px 34px rgba(178,58,77,0.10);
-      --hero-a: #fff2f0;
-      --hero-b: #fce9df;
-      --hero-c: #f3ecfa;
-      --logo-filter: none;
-  }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; }
   body {
     font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
-    background: var(--page);
-    color: var(--text-primary);
-    line-height: 1.5;
-    -webkit-font-smoothing: antialiased;
+    background: var(--page); color: var(--text-primary); line-height: 1.5;
+    -webkit-font-smoothing: antialiased; overscroll-behavior-y: none;
   }
-  .wrap { max-width: 1000px; margin: 0 auto; padding: 22px 20px 56px; }
+  .app {
+    max-width: 480px; margin: 0 auto; min-height: 100%;
+    background: var(--page); position: relative;
+    box-shadow: 0 0 60px rgba(0,0,0,0.06);
+  }
 
-  /* ---- Hero ---- */
-  header {
-    position: relative; overflow: hidden;
-    border: 1px solid var(--border); border-radius: 20px;
-    padding: 28px 30px; margin-bottom: 18px;
-    background:
-      radial-gradient(120% 140% at 0% 0%, var(--hero-a) 0%, transparent 55%),
-      radial-gradient(120% 150% at 100% 0%, var(--hero-c) 0%, transparent 50%),
-      linear-gradient(135deg, var(--hero-b), var(--surface-1));
-    display: flex; align-items: flex-start; justify-content: space-between; gap: 20px;
+  /* ---- Sticky app bar ---- */
+  .appbar {
+    position: sticky; top: 0; z-index: 50;
+    padding: calc(env(safe-area-inset-top) + 14px) 18px 12px;
+    background: linear-gradient(135deg, #fce9df, var(--surface-1));
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 12px;
   }
-  header::after {
-    content: ""; position: absolute; right: -40px; bottom: -60px;
-    width: 220px; height: 220px; border-radius: 50%;
-    background: radial-gradient(circle, var(--series-soft), transparent 70%);
-    pointer-events: none;
-  }
-  .hero-copy { position: relative; z-index: 1; }
-  .eyebrow {
-    display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
-    text-transform: uppercase; color: var(--series); margin-bottom: 9px;
-    padding: 4px 10px; border-radius: 999px; background: var(--series-soft);
-  }
-  header h1 { font-size: 30px; font-weight: 750; letter-spacing: -0.02em; line-height: 1.12; }
-  header p { color: var(--text-secondary); font-size: 14.5px; margin-top: 8px; max-width: 540px; }
-  .logo { height: 50px; flex-shrink: 0; position: relative; z-index: 1; filter: var(--logo-filter); }
+  @media (prefers-color-scheme: dark) { .appbar { background: linear-gradient(135deg, #241a1c, var(--surface-1)); } }
+  .appbar .logo { height: 30px; filter: var(--logo-filter); }
+  .appbar .titles { flex: 1; min-width: 0; }
+  .appbar h1 { font-size: 17px; font-weight: 750; letter-spacing: -0.02em; line-height: 1.1; }
+  .appbar .tag { font-size: 10.5px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: var(--series); }
 
-  /* ---- Gender segmented control ---- */
-  .segwrap { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
-  .segwrap .seg-q { font-size: 13px; font-weight: 600; color: var(--text-secondary); }
+  .scroll { padding: 16px 16px calc(env(safe-area-inset-bottom) + 40px); }
+
+  .lede { font-size: 13.5px; color: var(--text-secondary); margin-bottom: 16px; }
+
+  /* ---- Gender segmented ---- */
   .seg {
-    display: inline-flex; padding: 4px; gap: 4px;
-    background: var(--surface-1); border: 1px solid var(--border); border-radius: 999px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 5px; padding: 5px;
+    background: var(--surface-1); border: 1px solid var(--border); border-radius: 14px;
+    margin-bottom: 14px;
   }
   .seg button {
-    font-family: inherit; font-size: 13.5px; font-weight: 650; cursor: pointer;
-    padding: 8px 18px; border-radius: 999px; border: none; background: transparent;
+    font-family: inherit; font-size: 15px; font-weight: 700; cursor: pointer;
+    padding: 12px 0; border-radius: 10px; border: none; background: transparent;
     color: var(--text-secondary); transition: background 0.18s, color 0.18s;
   }
-  .seg button:hover { color: var(--text-primary); }
   .seg button[aria-pressed="true"] { background: var(--series); color: #fff; }
-  .seg button:focus-visible { outline: 2px solid var(--series); outline-offset: 2px; }
 
   /* ---- Filters ---- */
-  .filters {
-    display: grid; grid-template-columns: repeat(4, 1fr);
-    gap: 12px; margin-bottom: 22px;
-  }
-  @media (max-width: 720px) { .filters { grid-template-columns: 1fr 1fr; } }
-  @media (max-width: 430px) { .filters { grid-template-columns: 1fr; } }
+  .filters { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 18px; }
+  .filter.full { grid-column: 1 / -1; }
   .filter label {
-    display: block; font-size: 10.5px; font-weight: 700; text-transform: uppercase;
-    letter-spacing: 0.07em; color: var(--text-muted); margin-bottom: 6px;
+    display: block; font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.06em; color: var(--text-muted); margin-bottom: 5px;
   }
   .filter select {
-    width: 100%; padding: 11px 34px 11px 13px; font-size: 14px; font-family: inherit;
-    font-weight: 500; color: var(--text-primary); background: var(--surface-1);
-    border: 1px solid var(--border); border-radius: 11px; cursor: pointer;
+    width: 100%; padding: 13px 34px 13px 13px; font-size: 15px; font-family: inherit; font-weight: 550;
+    color: var(--text-primary); background: var(--surface-1);
+    border: 1px solid var(--border); border-radius: 12px; cursor: pointer;
     appearance: none; -webkit-appearance: none;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23b23a4d' stroke-width='1.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
     background-repeat: no-repeat; background-position: right 13px center;
-    transition: border-color 0.18s, box-shadow 0.18s;
   }
-  .filter select:hover { border-color: var(--series); }
-  .filter select:focus { outline: none; border-color: var(--series); box-shadow: 0 0 0 3px var(--series-soft); }
+  .filter select:focus { outline: none; border-color: var(--series); }
 
-  /* ---- Cards ---- */
-  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  @media (max-width: 720px) { .grid { grid-template-columns: 1fr; } }
-
+  /* ---- Cards (stacked) ---- */
+  .grid { display: flex; flex-direction: column; gap: 12px; }
   .card {
     background: var(--surface-1); border: 1px solid var(--border);
-    border-radius: 16px; padding: 20px 21px; box-shadow: var(--card-shadow);
-    transition: transform 0.2s cubic-bezier(0.22,1,0.36,1), box-shadow 0.2s, border-color 0.2s;
+    border-radius: 16px; padding: 17px 17px 18px;
   }
-  .card:hover {
-    transform: translateY(-3px); box-shadow: var(--card-shadow-hover);
-    border-color: color-mix(in srgb, var(--series) 30%, var(--border));
-  }
-  .card h2 { font-size: 15px; font-weight: 650; letter-spacing: -0.01em; }
-  .card h2 .tip { margin-left: 6px; vertical-align: middle; }
+  .card h2 { font-size: 15px; font-weight: 700; letter-spacing: -0.01em; }
+  .card h2 .tip { margin-left: 5px; vertical-align: middle; }
   .card .sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
 
-  .meter-row { display: flex; align-items: baseline; gap: 11px; margin-top: 16px; }
-  .meter-value { font-size: 38px; font-weight: 700; letter-spacing: -0.03em; line-height: 1; }
+  .meter-row { display: flex; align-items: baseline; gap: 9px; margin-top: 14px; flex-wrap: wrap; }
+  .meter-value { font-size: 40px; font-weight: 750; letter-spacing: -0.03em; line-height: 1; }
+  .est {
+    font-size: 9.5px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;
+    color: var(--text-muted); border: 1px solid var(--border); border-radius: 5px; padding: 2px 5px; vertical-align: 4px;
+  }
   .meter-tier {
-    font-size: 11.5px; font-weight: 700; letter-spacing: 0.03em; color: var(--series);
-    padding: 4px 9px; border-radius: 999px; background: var(--series-soft);
-    text-transform: uppercase;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.03em; color: var(--series);
+    padding: 4px 9px; border-radius: 999px; background: var(--series-soft); text-transform: uppercase;
   }
-  .meter { margin-top: 11px; height: 16px; background: var(--track); border-radius: 5px; overflow: hidden; }
-  .meter .fill {
-    height: 100%; background: var(--series);
-    border-radius: 0 5px 5px 0;   /* rounded data-end, square baseline */
-    transition: width 0.6s cubic-bezier(0.22,1,0.36,1);
-  }
-  .note { font-size: 13px; color: var(--text-secondary); margin-top: 13px; line-height: 1.5; }
+  .meter { margin-top: 12px; height: var(--bar-h); background: var(--track); border-radius: 5px; overflow: hidden; }
+  .meter .fill { height: 100%; background: var(--series); border-radius: 0 5px 5px 0; transition: width 0.6s cubic-bezier(0.22,1,0.36,1); }
+  .note { font-size: 13px; color: var(--text-secondary); margin-top: 12px; line-height: 1.5; }
 
   /* ---- Love language ---- */
-  .ll-rows { margin-top: 16px; display: flex; flex-direction: column; gap: 12px; }
-  .ll-row { display: grid; grid-template-columns: 140px 1fr; gap: 12px; align-items: center; }
-  .ll-label { font-size: 13px; color: var(--text-secondary); text-align: right; }
-  .ll-row.top .ll-label { color: var(--text-primary); font-weight: 650; }
-  .ll-bar-wrap { display: flex; align-items: center; gap: 9px; }
-  .ll-track { flex: 1; height: 15px; background: var(--track); border-radius: 5px; overflow: hidden; }
-  .ll-fill {
-    height: 100%; background: var(--series); border-radius: 0 5px 5px 0; opacity: 0.55;
-    transition: width 0.6s cubic-bezier(0.22,1,0.36,1);
-  }
+  .ll-rows { margin-top: 14px; display: flex; flex-direction: column; gap: 11px; }
+  .ll-row { display: grid; grid-template-columns: 108px 1fr; gap: 9px; align-items: center; }
+  .ll-label { font-size: 12.5px; color: var(--text-secondary); text-align: right; }
+  .ll-row.top .ll-label { color: var(--text-primary); font-weight: 700; }
+  .ll-bar-wrap { display: flex; align-items: center; gap: 7px; }
+  .ll-track { flex: 1; height: var(--bar-h); background: var(--track); border-radius: 5px; overflow: hidden; }
+  .ll-fill { height: 100%; background: var(--series); border-radius: 0 5px 5px 0; opacity: 0.55; transition: width 0.6s cubic-bezier(0.22,1,0.36,1); }
   .ll-row.top .ll-fill { opacity: 1; }
-  .ll-val {
-    font-size: 12px; color: var(--text-secondary); min-width: 38px;
-    font-variant-numeric: tabular-nums;
-  }
+  .ll-val { font-size: 12px; color: var(--text-secondary); min-width: 34px; font-variant-numeric: tabular-nums; }
   .ll-row.top .ll-val { color: var(--text-primary); font-weight: 700; }
 
   /* ---- Insight ---- */
-  .insight { grid-column: 1 / -1; background: var(--surface-2); }
-  .insight ul { margin-top: 12px; list-style: none; display: flex; flex-direction: column; gap: 10px; }
-  .insight li {
-    font-size: 14px; color: var(--text-secondary); line-height: 1.5;
-    padding-left: 26px; position: relative;
-  }
-  .insight li::before {
-    content: "→"; position: absolute; left: 4px; top: 0;
-    color: var(--series); font-weight: 700;
-  }
-  .insight li strong { color: var(--text-primary); font-weight: 650; }
+  .insight { background: var(--surface-2); }
+  .insight ul { margin-top: 11px; list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .insight li { font-size: 13.5px; color: var(--text-secondary); line-height: 1.5; padding-left: 22px; position: relative; }
+  .insight li::before { content: "→"; position: absolute; left: 2px; top: 0; color: var(--series); font-weight: 700; }
+  .insight li strong { color: var(--text-primary); font-weight: 700; }
 
-  /* ---- Tooltip ---- */
+  /* ---- Tooltip (tap) ---- */
   .tip { position: relative; display: inline-flex; }
   .tip .i {
-    width: 16px; height: 16px; border-radius: 50%; border: 1px solid var(--text-muted);
-    color: var(--text-muted); font-size: 10px; font-style: normal; font-weight: 600;
-    display: inline-flex; align-items: center; justify-content: center; cursor: help;
-    transition: color 0.15s, border-color 0.15s;
+    width: 17px; height: 17px; border-radius: 50%; border: 1px solid var(--text-muted);
+    color: var(--text-muted); font-size: 10px; font-weight: 700; font-style: normal;
+    display: inline-flex; align-items: center; justify-content: center;
   }
-  .tip:hover .i, .tip:focus-within .i { color: var(--series); border-color: var(--series); }
   .tip .bubble {
-    opacity: 0; visibility: hidden; position: absolute; bottom: calc(100% + 9px); left: 50%;
-    transform: translateX(-50%) translateY(4px); width: 234px; padding: 10px 12px;
-    background: var(--text-primary); color: var(--page);
-    font-size: 12px; font-weight: 400; line-height: 1.5;
-    border-radius: 10px; z-index: 10; box-shadow: 0 8px 24px rgba(0,0,0,0.18);
-    transition: opacity 0.16s, transform 0.16s; pointer-events: none;
+    opacity: 0; visibility: hidden; position: absolute; bottom: calc(100% + 8px); left: 50%;
+    transform: translateX(-50%); width: 220px; max-width: 74vw; padding: 10px 12px;
+    background: var(--text-primary); color: var(--page); font-size: 12px; font-weight: 400; line-height: 1.5;
+    border-radius: 10px; z-index: 20; box-shadow: 0 8px 24px rgba(0,0,0,0.22);
   }
-  .tip .bubble::after {
-    content: ""; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
-    border: 6px solid transparent; border-top-color: var(--text-primary);
-  }
-  .tip:hover .bubble, .tip:focus-within .bubble { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
+  .tip:focus-within .bubble { opacity: 1; visibility: visible; }
 
-  /* ---- Accountability: banner, basis panels, methodology ---- */
-  .databanner {
-    display: flex; gap: 10px; align-items: flex-start;
-    font-size: 12.5px; color: var(--text-secondary); line-height: 1.5;
-    padding: 11px 14px; margin-bottom: 20px;
-    background: var(--series-soft); border: 1px solid var(--border);
-    border-left: 3px solid var(--series); border-radius: 10px;
-  }
-  .databanner b { color: var(--text-primary); font-weight: 650; }
-  .databanner a { color: var(--series); text-decoration: underline; text-underline-offset: 2px; }
-
-  .est {
-    font-size: 10px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;
-    color: var(--text-muted); border: 1px solid var(--border); border-radius: 5px;
-    padding: 2px 5px; margin-left: 2px; vertical-align: 3px;
-  }
-
-  details.basis { margin-top: 13px; border-top: 1px solid var(--border); padding-top: 10px; }
-  details.basis summary {
-    font-size: 11.5px; font-weight: 650; color: var(--text-muted); cursor: pointer;
-    list-style: none; display: flex; align-items: center; gap: 6px;
-    transition: color 0.15s;
-  }
-  details.basis summary:hover { color: var(--series); }
+  /* ---- Basis + methodology ---- */
+  details.basis { margin-top: 12px; border-top: 1px solid var(--border); padding-top: 10px; }
+  details.basis summary { font-size: 11.5px; font-weight: 700; color: var(--text-muted); cursor: pointer; list-style: none; display: flex; align-items: center; gap: 6px; }
   details.basis summary::-webkit-details-marker { display: none; }
-  details.basis summary::before {
-    content: "▸"; font-size: 9px; transition: transform 0.15s; display: inline-block;
-  }
+  details.basis summary::before { content: "▸"; font-size: 9px; transition: transform 0.15s; }
   details.basis[open] summary::before { transform: rotate(90deg); }
   details.basis .basis-body { margin-top: 9px; font-size: 12.5px; color: var(--text-secondary); line-height: 1.55; }
   details.basis .basis-body .row { margin-bottom: 6px; }
-  details.basis .basis-body .k { color: var(--text-primary); font-weight: 650; }
+  details.basis .k { color: var(--text-primary); font-weight: 700; }
   .conf { display: inline-block; font-size: 10.5px; font-weight: 700; padding: 2px 7px; border-radius: 999px; }
   .conf.dir { color: var(--series); background: var(--series-soft); }
   .conf.ill { color: var(--text-muted); background: var(--track); }
 
-  .methodology {
-    grid-column: 1 / -1; background: var(--surface-2); border-radius: 16px;
-    border: 1px solid var(--border); padding: 4px 21px;
-  }
-  .methodology > summary {
-    font-size: 15px; font-weight: 650; letter-spacing: -0.01em; cursor: pointer;
-    padding: 16px 0; list-style: none; display: flex; align-items: center; gap: 8px;
-  }
+  .methodology { background: var(--surface-2); border: 1px solid var(--border); border-radius: 16px; padding: 2px 17px; }
+  .methodology > summary { font-size: 14.5px; font-weight: 700; cursor: pointer; padding: 15px 0; list-style: none; display: flex; align-items: center; gap: 8px; }
   .methodology > summary::-webkit-details-marker { display: none; }
   .methodology > summary::before { content: "▸"; font-size: 11px; transition: transform 0.15s; }
   .methodology[open] > summary::before { transform: rotate(90deg); }
-  .methodology .m-body { padding-bottom: 18px; font-size: 13.5px; color: var(--text-secondary); line-height: 1.6; }
-  .methodology h3 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin: 16px 0 8px; }
-  .methodology ul { list-style: none; display: flex; flex-direction: column; gap: 9px; }
-  .methodology li { padding-left: 16px; position: relative; }
+  .methodology .m-body { padding-bottom: 16px; font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+  .methodology h3 { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin: 15px 0 8px; }
+  .methodology ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .methodology li { padding-left: 15px; position: relative; }
   .methodology li::before { content: "—"; position: absolute; left: 0; color: var(--series); }
-  .methodology a { color: var(--series); text-decoration: underline; text-underline-offset: 2px; word-break: break-word; }
-  .methodology .k { color: var(--text-primary); font-weight: 650; }
+  .methodology a { color: var(--series); text-underline-offset: 2px; word-break: break-word; }
+  .methodology .k { color: var(--text-primary); font-weight: 700; }
 
-  footer {
-    margin-top: 28px; font-size: 12px; color: var(--text-muted); line-height: 1.55;
-    max-width: 760px; padding: 14px 16px; border: 1px dashed var(--border);
-    border-radius: 12px; background: var(--surface-1);
-  }
+  footer { margin-top: 18px; font-size: 11.5px; color: var(--text-muted); line-height: 1.55; padding: 13px 15px; border: 1px dashed var(--border); border-radius: 12px; background: var(--surface-1); }
 
-  @media (prefers-reduced-motion: reduce) {
-    * { transition: none !important; scroll-behavior: auto; }
-  }
-  @media (max-width: 560px) {
-    header { flex-direction: column-reverse; align-items: flex-start; padding: 22px; }
-    header h1 { font-size: 25px; }
-    .meter-value { font-size: 32px; }
-  }
+  .installhint { margin-top: 14px; font-size: 11.5px; color: var(--text-muted); text-align: center; }
+
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
 </head>
 <body>
-<div class="wrap">
+<div class="app">
 
-  <header>
-    <div class="hero-copy">
-      <span class="eyebrow">Dating culture · Bali</span>
-      <h1>Bali Dating Decoder</h1>
-      <p>Dating in Bali means dating the whole world. Pick a background and see what
-         the behavior usually means — before you overthink that unanswered text.</p>
-    </div>
+  <div class="appbar">
     <img class="logo" src="data:image/png;base64,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" alt="Stella logo">
-  </header>
+    <div class="titles">
+      <div class="tag">Bali</div>
+      <h1>Dating Decoder</h1>
+    </div>
+  </div>
 
-  <div class="segwrap">
-    <span class="seg-q">Decode a</span>
+  <div class="scroll">
+    <p class="lede">Pick a background — see what the behavior usually means before you overthink it.</p>
+
     <div class="seg" role="group" aria-label="Choose who to decode">
       <button id="seg-m" aria-pressed="true">Guy</button>
       <button id="seg-f" aria-pressed="false">Girl</button>
     </div>
+
+    <div class="filters">
+      <div class="filter full">
+        <label for="origin">Where <span class="psubj">he</span>'s from</label>
+        <select id="origin"></select>
+      </div>
+      <div class="filter full">
+        <label for="religion">Religion</label>
+        <select id="religion">
+          <option value="very">Very religious</option>
+          <option value="moderate" selected>Moderately religious</option>
+          <option value="secular">Not religious</option>
+        </select>
+      </div>
+      <div class="filter">
+        <label for="education">Education</label>
+        <select id="education">
+          <option value="hs">High school</option>
+          <option value="ba" selected>Bachelor's</option>
+          <option value="ma">Master's+</option>
+        </select>
+      </div>
+      <div class="filter">
+        <label for="politics">Politics</label>
+        <select id="politics">
+          <option value="trad">Traditional</option>
+          <option value="mod" selected>Moderate</option>
+          <option value="prog">Progressive</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="grid">
+
+      <div class="card">
+        <h2>Paying the bills <span class="tip"><span class="i" tabindex="0">i</span><span class="bubble" id="bills-tip"></span></span></h2>
+        <div class="sub" id="bills-sub"></div>
+        <div class="meter-row"><div class="meter-value" id="bills-val">—</div><span class="est">est</span><div class="meter-tier" id="bills-tier"></div></div>
+        <div class="meter"><div class="fill" id="bills-fill"></div></div>
+        <div class="note" id="bills-note"></div>
+        <details class="basis"><summary>Basis &amp; confidence</summary><div class="basis-body">
+          <div class="row"><span class="k">Drives the score:</span> Hofstede Masculinity + traditional gender-role norms (World Values Survey).</div>
+          <div class="row"><span class="k">Confidence:</span> <span class="conf dir">Directional</span> — ranking defensible; number modeled.</div>
+        </div></details>
+      </div>
+
+      <div class="card">
+        <h2>Level of commitment <span class="tip"><span class="i" tabindex="0">i</span><span class="bubble">How likely <span class="psubj">he</span> is to want something serious, long-term.</span></span></h2>
+        <div class="sub">Likelihood <span class="psubj">he</span> wants something serious</div>
+        <div class="meter-row"><div class="meter-value" id="commit-val">—</div><span class="est">est</span><div class="meter-tier" id="commit-tier"></div></div>
+        <div class="meter"><div class="fill" id="commit-fill"></div></div>
+        <div class="note" id="commit-note"></div>
+        <details class="basis"><summary>Basis &amp; confidence</summary><div class="basis-body">
+          <div class="row"><span class="k">Drives the score:</span> Hofstede Long-Term Orientation + religiosity (Pew) + collectivism.</div>
+          <div class="row"><span class="k">Confidence:</span> <span class="conf dir">Directional</span> — life-stage matters more than nationality.</div>
+        </div></details>
+      </div>
+
+      <div class="card">
+        <h2>Family in the picture <span class="tip"><span class="i" tabindex="0">i</span><span class="bubble">How early family opinion matters — meeting the parents can mean everything or nothing.</span></span></h2>
+        <div class="sub">How much family approval shapes the relationship</div>
+        <div class="meter-row"><div class="meter-value" id="family-val">—</div><span class="est">est</span><div class="meter-tier" id="family-tier"></div></div>
+        <div class="meter"><div class="fill" id="family-fill"></div></div>
+        <div class="note" id="family-note"></div>
+        <details class="basis"><summary>Basis &amp; confidence</summary><div class="basis-body">
+          <div class="row"><span class="k">Drives the score:</span> Inverse of Hofstede Individualism + World Values Survey family items.</div>
+          <div class="row"><span class="k">Confidence:</span> <span class="conf dir">Directional</span> — well-supported cross-culturally.</div>
+        </div></details>
+      </div>
+
+      <div class="card">
+        <h2>Says what <span class="psubj">he</span> means <span class="tip"><span class="i" tabindex="0">i</span><span class="bubble">Directness — whether "let's hang out sometime" is a plan, a maybe, or a polite no.</span></span></h2>
+        <div class="sub">Directness about feelings and intentions</div>
+        <div class="meter-row"><div class="meter-value" id="direct-val">—</div><span class="est">est</span><div class="meter-tier" id="direct-tier"></div></div>
+        <div class="meter"><div class="fill" id="direct-fill"></div></div>
+        <div class="note" id="direct-note"></div>
+        <details class="basis"><summary>Basis &amp; confidence</summary><div class="basis-body">
+          <div class="row"><span class="k">Drives the score:</span> Erin Meyer's <i>Culture Map</i> (high/low-context) + Hofstede Individualism.</div>
+          <div class="row"><span class="k">Confidence:</span> <span class="conf dir">Directional</span> — the context split is robust.</div>
+        </div></details>
+      </div>
+
+      <div class="card">
+        <h2>Common love language <span class="tip"><span class="i" tabindex="0">i</span><span class="bubble">How people of this background most often show love.</span></span></h2>
+        <div class="sub">How <span class="psubj">he</span>'s most likely to express affection</div>
+        <div class="ll-rows" id="ll-rows"></div>
+        <details class="basis"><summary>Basis &amp; confidence</summary><div class="basis-body">
+          <div class="row"><span class="k">Drives the score:</span> Categories from Gary Chapman's <i>Five Love Languages</i>. The by-nationality split has <b>no dataset</b>.</div>
+          <div class="row"><span class="k">Confidence:</span> <span class="conf ill">Illustrative only</span> — read as vibes, not evidence.</div>
+        </div></details>
+      </div>
+
+      <div class="card insight">
+        <h2>How to read <span class="psubj">him</span></h2>
+        <ul id="insight-list"></ul>
+      </div>
+
+      <details class="methodology" id="methodology">
+        <summary>Methodology &amp; sources</summary>
+        <div class="m-body">
+          <p><span class="k">How the numbers are built.</span> Each culture gets a base score I set by hand from the direction of established cross-cultural research. Filters nudge it. Result is a <span class="k">modeled estimate</span>, <span class="k">not measured from real daters</span>.</p>
+          <h3>Frameworks</h3>
+          <ul>
+            <li><span class="k">Hofstede dimensions</span> — Individualism, Masculinity, Long-Term Orientation. <a href="https://www.hofstede-insights.com/country-comparison-tool" target="_blank" rel="noopener">hofstede-insights.com</a></li>
+            <li><span class="k">Erin Meyer, <i>The Culture Map</i></span> — high/low-context communication. <a href="https://erinmeyer.com/books/the-culture-map/" target="_blank" rel="noopener">erinmeyer.com</a></li>
+            <li><span class="k">Pew Research</span> — religiosity by country. <a href="https://www.pewresearch.org/religion/" target="_blank" rel="noopener">pewresearch.org</a></li>
+            <li><span class="k">World Values Survey</span> — gender roles, family. <a href="https://www.worldvaluessurvey.org" target="_blank" rel="noopener">worldvaluessurvey.org</a></li>
+            <li><span class="k">Gary Chapman</span> — the five love-language categories only.</li>
+          </ul>
+          <h3>Where it is NOT valid</h3>
+          <ul>
+            <li>Exact % is fake-precise — read as bands (low/mixed/high).</li>
+            <li>Love-language split + filter deltas have no dataset.</li>
+            <li>Cultures are broad averages; any individual can be the opposite.</li>
+          </ul>
+        </div>
+      </details>
+
+    </div>
+
+    <footer>Illustrative cultural patterns for orientation — not scientific data, never a substitute for knowing the actual person. A conversation starter, not a verdict.</footer>
+    <p class="installhint">Tip: tap Share → “Add to Home Screen” to install as an app.</p>
   </div>
-
-  <div class="filters">
-    <div class="filter">
-      <label for="origin">Where <span class="psubj">he</span>'s from</label>
-      <select id="origin"></select>
-    </div>
-    <div class="filter">
-      <label for="religion">Religion</label>
-      <select id="religion">
-        <option value="very">Very religious</option>
-        <option value="moderate" selected>Moderately religious</option>
-        <option value="secular">Not religious</option>
-      </select>
-    </div>
-    <div class="filter">
-      <label for="education">Education</label>
-      <select id="education">
-        <option value="hs">High school / vocational</option>
-        <option value="ba" selected>Bachelor's degree</option>
-        <option value="ma">Master's or above</option>
-      </select>
-    </div>
-    <div class="filter">
-      <label for="politics">Political leaning</label>
-      <select id="politics">
-        <option value="trad">Traditional · conservative</option>
-        <option value="mod" selected>Moderate</option>
-        <option value="prog">Progressive · liberal</option>
-      </select>
-    </div>
-  </div>
-
-  <div class="grid">
-
-    <div class="card">
-      <h2>Paying the bills
-        <span class="tip"><span class="i" tabindex="0">i</span>
-          <span class="bubble" id="bills-tip"></span>
-        </span>
-      </h2>
-      <div class="sub" id="bills-sub"></div>
-      <div class="meter-row">
-        <div class="meter-value" id="bills-val">—</div><span class="est">est</span>
-        <div class="meter-tier" id="bills-tier"></div>
-      </div>
-      <div class="meter" role="img" aria-label="Paying the bills score"><div class="fill" id="bills-fill"></div></div>
-      <div class="note" id="bills-note"></div>
-      <details class="basis">
-        <summary>Basis &amp; confidence</summary>
-        <div class="basis-body">
-          <div class="row"><span class="k">Drives the score:</span> Hofstede Masculinity dimension + traditional gender-role norms (World Values Survey). Cultures with gendered courtship scripts score higher on "he pays".</div>
-          <div class="row"><span class="k">Confidence:</span> <span class="conf dir">Directional</span> — the ranking between cultures is defensible; the exact number is modeled.</div>
-        </div>
-      </details>
-    </div>
-
-    <div class="card">
-      <h2>Level of commitment
-        <span class="tip"><span class="i" tabindex="0">i</span>
-          <span class="bubble">How likely <span class="psubj">he</span> is to be dating with a serious, long-term relationship in mind.</span>
-        </span>
-      </h2>
-      <div class="sub">Likelihood <span class="psubj">he</span> wants something serious</div>
-      <div class="meter-row">
-        <div class="meter-value" id="commit-val">—</div><span class="est">est</span>
-        <div class="meter-tier" id="commit-tier"></div>
-      </div>
-      <div class="meter" role="img" aria-label="Commitment score"><div class="fill" id="commit-fill"></div></div>
-      <div class="note" id="commit-note"></div>
-      <details class="basis">
-        <summary>Basis &amp; confidence</summary>
-        <div class="basis-body">
-          <div class="row"><span class="k">Drives the score:</span> Hofstede Long-Term Orientation + religiosity (Pew Global Attitudes) + collectivism. Marriage-oriented, religious, family-first cultures score higher.</div>
-          <div class="row"><span class="k">Confidence:</span> <span class="conf dir">Directional</span> — heavily individual; life-stage matters more than nationality.</div>
-        </div>
-      </details>
-    </div>
-
-    <div class="card">
-      <h2>Family in the picture
-        <span class="tip"><span class="i" tabindex="0">i</span>
-          <span class="bubble">How early family opinion and introductions matter — meeting the parents can mean everything or nothing.</span>
-        </span>
-      </h2>
-      <div class="sub">How much family approval shapes the relationship</div>
-      <div class="meter-row">
-        <div class="meter-value" id="family-val">—</div><span class="est">est</span>
-        <div class="meter-tier" id="family-tier"></div>
-      </div>
-      <div class="meter" role="img" aria-label="Family involvement score"><div class="fill" id="family-fill"></div></div>
-      <div class="note" id="family-note"></div>
-      <details class="basis">
-        <summary>Basis &amp; confidence</summary>
-        <div class="basis-body">
-          <div class="row"><span class="k">Drives the score:</span> Inverse of Hofstede Individualism — collectivist cultures weave family into dating decisions. Reinforced by World Values Survey family-importance items.</div>
-          <div class="row"><span class="k">Confidence:</span> <span class="conf dir">Directional</span> — one of the better-supported dimensions cross-culturally.</div>
-        </div>
-      </details>
-    </div>
-
-    <div class="card">
-      <h2>Says what <span class="psubj">he</span> means
-        <span class="tip"><span class="i" tabindex="0">i</span>
-          <span class="bubble">Communication directness — whether "let's hang out sometime" is a plan, a maybe, or a polite no.</span>
-        </span>
-      </h2>
-      <div class="sub">Directness about feelings and intentions</div>
-      <div class="meter-row">
-        <div class="meter-value" id="direct-val">—</div><span class="est">est</span>
-        <div class="meter-tier" id="direct-tier"></div>
-      </div>
-      <div class="meter" role="img" aria-label="Directness score"><div class="fill" id="direct-fill"></div></div>
-      <div class="note" id="direct-note"></div>
-      <details class="basis">
-        <summary>Basis &amp; confidence</summary>
-        <div class="basis-body">
-          <div class="row"><span class="k">Drives the score:</span> Erin Meyer's <i>Culture Map</i> (low- vs high-context communication) + Hofstede Individualism. Low-context, collectivist cultures communicate indirectly.</div>
-          <div class="row"><span class="k">Confidence:</span> <span class="conf dir">Directional</span> — well-studied; the high/low-context split is robust.</div>
-        </div>
-      </details>
-    </div>
-
-    <div class="card" style="grid-column: 1 / -1;">
-      <h2>Common love language
-        <span class="tip"><span class="i" tabindex="0">i</span>
-          <span class="bubble">How people of this background most often show love. If <span class="psubj">he</span> fixes your scooter instead of saying "I miss you" — that might BE the "I miss you".</span>
-        </span>
-      </h2>
-      <div class="sub">How <span class="psubj">he</span>'s most likely to express affection</div>
-      <div class="ll-rows" id="ll-rows"></div>
-      <details class="basis">
-        <summary>Basis &amp; confidence</summary>
-        <div class="basis-body">
-          <div class="row"><span class="k">Drives the score:</span> The five categories come from Gary Chapman's <i>Five Love Languages</i>. The split <i>by nationality</i> has <b>no dataset</b> — it is pattern-matching from cultural-expression norms.</div>
-          <div class="row"><span class="k">Confidence:</span> <span class="conf ill">Illustrative only</span> — the least grounded card. Read it as vibes, not evidence.</div>
-        </div>
-      </details>
-    </div>
-
-    <div class="card insight">
-      <h2>How to read <span class="psubj">him</span></h2>
-      <ul id="insight-list"></ul>
-    </div>
-
-    <details class="methodology" id="methodology">
-      <summary>Methodology &amp; sources</summary>
-      <div class="m-body">
-        <p><span class="k">How the numbers are built.</span> Each culture gets a base score per metric, which I
-          set by hand using the direction of established cross-cultural research (below). Your filter picks
-          (religion / education / politics) then nudge that base up or down. The result is a
-          <span class="k">modeled estimate</span> — reproducible from the logic, but <span class="k">not measured
-          from real daters</span>. No individual data was collected.</p>
-
-        <h3>Frameworks that inform the direction</h3>
-        <ul>
-          <li><span class="k">Hofstede cultural dimensions</span> — Individualism, Masculinity, Long-Term Orientation, Power Distance. Informs family involvement, bill-paying, commitment. <a href="https://www.hofstede-insights.com/country-comparison-tool" target="_blank" rel="noopener">hofstede-insights.com</a></li>
-          <li><span class="k">Erin Meyer, <i>The Culture Map</i></span> — high- vs low-context communication. Informs the "says what he means" directness score. <a href="https://erinmeyer.com/books/the-culture-map/" target="_blank" rel="noopener">erinmeyer.com</a></li>
-          <li><span class="k">Pew Research — Global Attitudes / religiosity</span> — how central religion is by country. Informs the religion filter and commitment. <a href="https://www.pewresearch.org/religion/" target="_blank" rel="noopener">pewresearch.org</a></li>
-          <li><span class="k">World Values Survey</span> — gender-role attitudes, family importance. Informs bill-paying and family. <a href="https://www.worldvaluessurvey.org" target="_blank" rel="noopener">worldvaluessurvey.org</a></li>
-          <li><span class="k">Gary Chapman, <i>The 5 Love Languages</i></span> — the five categories only. The by-nationality split has no supporting dataset.</li>
-        </ul>
-
-        <h3>Where it is NOT valid — be honest</h3>
-        <ul>
-          <li>The <span class="k">exact percentage</span> is fake-precise. "85%" means "high," not a measured rate. Read scores as bands (low / mixed / high), not decimals.</li>
-          <li>The <span class="k">love-language distribution</span> has no dataset. Illustrative only.</li>
-          <li>The <span class="k">filter adjustments</span> (religion / education / politics) are directional guesses, not fitted to data.</li>
-          <li>No dataset exists at this <span class="k">granularity</span> (culture × religion × education × politics). Those cells are interpolated.</li>
-          <li>Cultures are <span class="k">broad averages</span>. Any individual can be the complete opposite. This is a conversation starter, never a verdict on a real person.</li>
-        </ul>
-      </div>
-    </details>
-
-  </div>
-
-  <footer>
-    These are illustrative cultural patterns for fun and orientation — not scientific data,
-    and never a substitute for knowing the actual person. Every individual is different.
-    Use it as a conversation starter, not a verdict. Made in Bali.
-  </footer>
 </div>
 
 <script>
@@ -802,3 +624,10 @@ document.querySelectorAll(".insight .psubj").forEach(e => { e.dataset.role = "ob
 
 render();
 </script>
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(()=>{}));
+}
+</script>
+</body>
+</html>
